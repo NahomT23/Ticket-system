@@ -1,11 +1,25 @@
 import Ticket from "../models/ticketsModel.js";
 
+// export const getAllTicket = async (req, res) => {
+//   try {
+//     if (req.user.role !== "admin") {
+//       return res.status(403).json({ message: "Access denied. Admins only." });
+//     }
+//     const tickets = await Ticket.find().populate("createdBy", "name email");
+//     res.status(200).json({ success: true, data: tickets });
+//   } catch (error) {
+//     res.status(500).json({ message: "Error retrieving tickets", error: error.message });
+//   }
+// };
 export const getAllTicket = async (req, res) => {
   try {
     if (req.user.role !== "admin") {
       return res.status(403).json({ message: "Access denied. Admins only." });
     }
+    
+    // Populate createdBy field with name and email
     const tickets = await Ticket.find().populate("createdBy", "name email");
+
     res.status(200).json({ success: true, data: tickets });
   } catch (error) {
     res.status(500).json({ message: "Error retrieving tickets", error: error.message });
@@ -24,19 +38,35 @@ export const getTickets = async (req, res) => {
 export const getTicket = async (req, res) => {
   try {
     const { id } = req.params;
-    const ticket = await Ticket.findById(id);
+
+    // Fetch the ticket and populate the createdBy field with the user's name and email
+    const ticket = await Ticket.findById(id).populate("createdBy", "name email");
+
     if (!ticket) {
       return res.status(404).json({ message: "Ticket not found" });
     }
-    if (req.user.role !== "admin" && ticket.createdBy.toString() !== req.user._id.toString()) {
+
+    // Check access permissions
+    if (req.user.role !== "admin" && ticket.createdBy._id.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: "Access denied. You can only view your own tickets." });
     }
-    res.status(200).json({ success: true, data: ticket });
+
+    // Customize the response based on the user's role
+    let responseData;
+    if (req.user.role === "admin") {
+      // Admin gets full details, including the creator's name and email
+      responseData = ticket;
+    } else {
+      // Regular user gets only the ticket details (exclude createdBy)
+      const { createdBy, ...ticketDetails } = ticket.toObject(); // Remove createdBy from the response
+      responseData = ticketDetails;
+    }
+
+    res.status(200).json({ success: true, data: responseData });
   } catch (error) {
     res.status(500).json({ message: "Error retrieving the ticket", error: error.message });
   }
 };
-
 export const createTicket = async (req, res) => {
   try {
 

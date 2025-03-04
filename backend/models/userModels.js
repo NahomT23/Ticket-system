@@ -5,6 +5,10 @@ import { randomBytes } from 'crypto';
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
+  name: {
+    type: String,
+    required: [true, 'Name is required'],
+  },
   email: {
     type: String,
     unique: true,

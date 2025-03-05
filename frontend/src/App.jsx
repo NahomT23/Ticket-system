@@ -6,7 +6,7 @@ import SignUp from './pages/SignUp';
 import AdminDashboard from './pages/AdminDashboard';
 import UserDashboard from './pages/UserDashboard';
 import TicketDetails from './pages/TicketDetails';
-import UpdateTicket from './pages/UpdateTicket';
+import UpdateTicket from './pages/updateTicket';
 import ProtectedRoute from './components/ProtectedRoute';
 import Header from "./components/Header";
 import { ToastContainer } from 'react-toastify'; 

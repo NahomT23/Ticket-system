@@ -14,7 +14,6 @@ const Header = () => {
     dispatch(logout());
   };
 
-  // Check user role: if role is "user", show their name/email; otherwise, default to "Admin"
   const greeting = `Welcome back ${user?.name || user?.email}`
       
   return (

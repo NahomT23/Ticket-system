@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { signUpAsync } from '../features/authSlice';
 import { Link, useNavigate } from 'react-router-dom';
 
-// withRouter HOC to pass the navigate prop to our class component.
+
 function withRouter(Component) {
   return function ComponentWithRouterProp(props) {
     const navigate = useNavigate();
@@ -36,7 +36,7 @@ class SignUp extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    // For admin signup, an invitation code is required.
+
     if (this.state.role === 'admin' && !this.state.invitationCode) {
       alert('Invitation code is required for admin signup.');
       return;

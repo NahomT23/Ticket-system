@@ -42,7 +42,7 @@ export const signUpAsync = createAsyncThunk(
     if (!response.ok) {
       return thunkAPI.rejectWithValue(data.message || 'Failed to sign up');
     }
-    return data.data; // expecting { token, user }
+    return data.data; 
   }
 );
 

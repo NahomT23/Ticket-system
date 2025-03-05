@@ -6,7 +6,7 @@ import { useSelector, connect } from "react-redux";
 import "chart.js/auto";
 
 const DashboardAnalytics = ({ tickets }) => {
-  // Get dark mode flag from Redux (or your preferred store)
+
   const isDarkMode = useSelector((state) => state.theme.isDarkMode);
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.2 });
 
@@ -14,7 +14,7 @@ const DashboardAnalytics = ({ tickets }) => {
     return <p>No tickets found for analytics.</p>;
   }
 
-  // Calculate analytics data (example: counts by status and tickets per day in the last 7 days)
+
   const totalTickets = tickets.length;
   const statusCounts = { open: 0, "in progress": 0, completed: 0 };
   tickets.forEach((ticket) => {
@@ -24,7 +24,7 @@ const DashboardAnalytics = ({ tickets }) => {
     }
   });
 
-  // Build data for a line chart (tickets created per day in the last 7 days)
+
   const countsByDay = {};
   const today = new Date();
   for (let i = 6; i >= 0; i--) {

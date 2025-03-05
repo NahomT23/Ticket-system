@@ -1,4 +1,3 @@
-import cookieParser from "cookie-parser";
 import express from "express";
 import { configDotenv } from "dotenv";
 import authRouter from "./routes/authRoutes.js";
@@ -8,6 +7,7 @@ import ticketRouter from "./routes/ticketRoutes.js";
 import { adminLimiter, authLimiter, ticketLimiter } from "./middlewares/rateLimiterMiddleware.js";
 import helmet from 'helmet';
 import cors from 'cors'
+import cookieParser from "cookie-parser";
 
 configDotenv();
 
@@ -44,18 +44,4 @@ connectToDb();
 app.listen(PORT, () => {
     console.log(`Server is running on port: ${PORT}`);
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import CountUp from 'react-countup';
 import { connect } from 'react-redux';
+import { motion } from 'framer-motion';
+import { InView } from 'react-intersection-observer';
 
 class TicketStats extends Component {
   render() {
-    const { tickets } = this.props;
+    const { tickets, isDarkMode } = this.props;
 
     if (!tickets || tickets.length === 0) {
       return <p>No tickets found.</p>;
@@ -16,33 +18,45 @@ class TicketStats extends Component {
     const inProgressTickets = tickets.filter(ticket => ticket.status.toLowerCase() === 'in progress').length;
     const completedTickets = tickets.filter(ticket => ticket.status.toLowerCase() === 'completed').length;
 
+    // Animation variant for each card
+    const cardVariants = {
+      hidden: { opacity: 0, y: 20 },
+      visible: { opacity: 1, y: 0 }
+    };
+
+    const statsData = [
+      { title: 'Total Tickets', count: totalTickets },
+      { title: 'Open Tickets', count: openTickets },
+      { title: 'In Progress Tickets', count: inProgressTickets },
+      { title: 'Completed Tickets', count: completedTickets },
+    ];
+
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-4 bg-white shadow rounded">
-          <h3 className="text-lg font-semibold">Total Tickets</h3>
-          <p className="text-2xl">
-            <CountUp end={totalTickets} duration={2} /> tickets
-          </p>
-        </div>
-        <div className="p-4 bg-white shadow rounded">
-          <h3 className="text-lg font-semibold">Open Tickets</h3>
-          <p className="text-2xl">
-            <CountUp end={openTickets} duration={2} /> tickets
-          </p>
-        </div>
-        <div className="p-4 bg-white shadow rounded">
-          <h3 className="text-lg font-semibold">In Progress Tickets</h3>
-          <p className="text-2xl">
-            <CountUp end={inProgressTickets} duration={2} /> tickets
-          </p>
-        </div>
-        <div className="p-4 bg-white shadow rounded">
-          <h3 className="text-lg font-semibold">Completed Tickets</h3>
-          <p className="text-2xl">
-            <CountUp end={completedTickets} duration={2} /> tickets
-          </p>
-        </div>
-      </div>
+      <InView triggerOnce>
+        {({ inView, ref }) => (
+          <motion.div
+            ref={ref}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+            initial="hidden"
+            animate={inView ? "visible" : "hidden"}
+            variants={{ visible: { transition: { staggerChildren: 0.2 } } }}
+          >
+            {statsData.map((stat, index) => (
+              <motion.div
+                key={index}
+                variants={cardVariants}
+                transition={{ duration: 0.5 }}
+                className={`p-4 shadow rounded ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}
+              >
+                <h3 className="text-lg font-semibold">{stat.title}</h3>
+                <p className="text-2xl">
+                  <CountUp end={stat.count} duration={2} /> tickets
+                </p>
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
+      </InView>
     );
   }
 }

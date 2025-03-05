@@ -1,225 +1,323 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../features/authSlice';
-import { useNavigate } from 'react-router-dom';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { toast } from 'react-toastify';
+import Loading from '../components/Loading'; // Import the reusable Loading component
 
-const UserDashboard = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const auth = useSelector((state) => state.auth);
-  const [tickets, setTickets] = useState([]);
-  const [loadingTickets, setLoadingTickets] = useState(false);
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    priority: 'medium',
-  });
-  const [creating, setCreating] = useState(false);
-  
-  // Pagination state
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+class UserDashboard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      tickets: [],
+      loadingTickets: false,
+      formData: {
+        title: '',
+        description: '',
+        priority: 'medium',
+        status: 'open', // default status added
+      },
+      creating: false,
+      currentPage: 1,
+      itemsPerPage: 5,
+      isDialogOpen: false,
+    };
+  }
 
-  const handleLogout = () => {
+  componentDidMount() {
+    this.loadTickets();
+  }
+
+  handleLogout = () => {
+    const { dispatch, navigate } = this.props;
     dispatch(logout());
     navigate('/');
   };
 
-  const loadTickets = async () => {
-    setLoadingTickets(true);
+  loadTickets = async () => {
+    this.setState({ loadingTickets: true });
+    const { token } = this.props.auth;
     try {
-      const token = auth.token;
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/ticket/get`,
         {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
       const data = await response.json();
       if (!response.ok) {
-        alert(data.message || 'Error loading tickets');
+        toast(data.message || 'Error loading tickets');
       } else {
-        setTickets(data.data);
+        this.setState({ tickets: data.data });
       }
     } catch (error) {
       console.error('Error loading tickets:', error);
-      alert('Error loading tickets');
+      toast('Error loading tickets');
     } finally {
-      setLoadingTickets(false);
+      this.setState({ loadingTickets: false });
     }
   };
 
-  const handleChange = (e) => {
+  handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    this.setState((prevState) => ({
+      formData: { ...prevState.formData, [name]: value },
+    }));
   };
 
-  const handleCreateTicket = async (e) => {
+  handleCreateTicket = async (e) => {
     e.preventDefault();
-    setCreating(true);
+    this.setState({ creating: true });
+    const { formData } = this.state;
+    const { token } = this.props.auth;
     try {
-      const token = auth.token;
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/ticket/create`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(formData),
         }
       );
       const data = await response.json();
       if (!response.ok) {
-        alert(data.message || 'Error creating ticket');
+        toast(data.message || 'Error creating ticket');
       } else {
-        alert('Ticket created successfully');
-        setFormData({ title: '', description: '', priority: 'medium' });
-        loadTickets();
+        toast('Ticket created successfully');
+        this.setState({
+          formData: { title: '', description: '', priority: 'medium', status: 'open' },
+          isDialogOpen: false,
+        });
+        this.loadTickets(); // Refresh tickets after creation
       }
     } catch (error) {
       console.error('Error creating ticket:', error);
-      alert('Error creating ticket');
+      toast('Error creating ticket');
     } finally {
-      setCreating(false);
+      this.setState({ creating: false });
     }
   };
 
-  // Auto-load tickets on mount
-  useEffect(() => {
-    loadTickets();
-  }, []);
+  paginate = (pageNumber) => {
+    this.setState({ currentPage: pageNumber });
+  };
 
-  // Pagination calculations
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentTickets = tickets.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(tickets.length / itemsPerPage);
+  render() {
+    const {
+      tickets,
+      loadingTickets,
+      formData,
+      creating,
+      currentPage,
+      itemsPerPage,
+      isDialogOpen,
+    } = this.state;
+    const { isDarkMode } = this.props;
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+    // Container classes based on dark mode state
+    const containerClass = isDarkMode
+      ? 'bg-gray-900 text-gray-100'
+      : 'bg-white text-gray-900';
 
-  return (
-    <div className="p-8 text-gray-900 dark:text-gray-100">
-      <h1 className="text-3xl mb-6">User Dashboard</h1>
-      <div className="flex flex-wrap gap-4 mb-6">
-        <button
-          onClick={handleLogout}
-          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
-        >
-          Logout
-        </button>
-      </div>
-      <div className="mb-6">
-        <h2 className="text-2xl mb-4">Create Ticket</h2>
-        <form onSubmit={handleCreateTicket} className="bg-white dark:bg-gray-800 p-4 rounded shadow-md max-w-md">
-          <div className="mb-4">
-            <label className="block mb-1">Title:</label>
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded bg-gray-100 dark:bg-gray-700"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block mb-1">Description:</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded bg-gray-100 dark:bg-gray-700"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block mb-1">Priority:</label>
-            <select
-              name="priority"
-              value={formData.priority}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded bg-gray-100 dark:bg-gray-700"
+    // Pagination calculations
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentTickets = tickets.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(tickets.length / itemsPerPage);
+
+    return (
+      <div className={`mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-10 pb-4 min-h-screen ${isDarkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-300 text-gray-900'}`}>   <Dialog open={isDialogOpen} onOpenChange={(open) => this.setState({ isDialogOpen: open })}>
+          <DialogTrigger asChild>
+            <Button
+              variant="secondary"
+              className={`mb-4 ${isDarkMode ? 'bg-gray-700 text-gray-100' : 'bg-gray-300 text-gray-900'}`}
             >
-              <option value="high">High</option>
-              <option value="medium">Medium</option>
-              <option value="low">Low</option>
-            </select>
-          </div>
-          <button type="submit" className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded">
-            {creating ? 'Creating...' : 'Create Ticket'}
-          </button>
-        </form>
-      </div>
-      <div>
-        <h2 className="text-2xl mb-4">My Tickets</h2>
-        {loadingTickets ? (
-          <p>Loading tickets...</p>
-        ) : tickets.length === 0 ? (
-          <p>No tickets found.</p>
-        ) : (
-          <>
-            <div className="overflow-x-auto">
-              <table className="min-w-full border-collapse bg-white dark:bg-gray-800 shadow-md rounded">
+              Create Ticket
+            </Button>
+          </DialogTrigger>
+          <DialogContent
+            className={`sm:max-w-[425px] ${isDarkMode ? 'bg-gray-800 text-gray-100' : 'bg-white text-gray-900'}`}
+          >
+            <DialogHeader>
+              <DialogTitle>Create Ticket</DialogTitle>
+              <DialogDescription>
+                Fill out the form below to create a new ticket.
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={this.handleCreateTicket}>
+              <div className="grid gap-4 py-4">
+                <div>
+                  <label
+                    className={`block mb-2 px-3 py-1 rounded disabled:opacity-50 ${isDarkMode ? 'text-gray-100' : 'bg-white text-gray-900'}`}
+                  >
+                    Title:
+                  </label>
+                  <input
+                    type="text"
+                    name="title"
+                    value={formData.title}
+                    onChange={this.handleChange}
+                    className={`w-full px-3 py-2 border rounded-md ${isDarkMode ? 'bg-gray-700 text-gray-100 border-gray-600' : 'bg-white text-gray-900 border-gray-300'}`}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block mb-2">Description:</label>
+                  <textarea
+                    name="description"
+                    value={formData.description}
+                    onChange={this.handleChange}
+                    className={`w-full px-3 py-2 border rounded-md ${isDarkMode ? 'bg-gray-700 text-gray-100 border-gray-600' : 'bg-white text-gray-900 border-gray-300'}`}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block mb-2">Priority:</label>
+                  <select
+                    name="priority"
+                    value={formData.priority}
+                    onChange={this.handleChange}
+                    className={`w-full px-3 py-2 border rounded-md ${isDarkMode ? 'bg-gray-700 text-gray-100 border-gray-600' : 'bg-white text-gray-900 border-gray-300'}`}
+                  >
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block mb-2">Status:</label>
+                  <select
+                    name="status"
+                    value={formData.status}
+                    onChange={this.handleChange}
+                    className={`w-full px-3 py-2 border rounded-md ${isDarkMode ? 'bg-gray-700 text-gray-100 border-gray-600' : 'bg-white text-gray-900 border-gray-300'}`}
+                  >
+                    <option value="open">Open</option>
+                    <option value="in progress">In Progress</option>
+                    <option value="completed">Completed</option>
+                  </select>
+                </div>
+              </div>
+              <div className="flex justify-end gap-4 pt-4">
+                <Button
+                  variant="secondary"
+                  onClick={() => this.setState({ isDialogOpen: false })}
+                  type="button"
+                  className={`${isDarkMode ? 'bg-gray-700 text-gray-100' : 'bg-gray-300 text-gray-900'}`}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={creating}
+                  className={`${isDarkMode ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+                >
+                  {creating ? 'Creating...' : 'Create Ticket'}
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
+
+        {/* Tickets Table */}
+        <div className="mt-6 flex flex-col flex-grow">
+          <h2 className="text-lg font-medium mb-4">My Tickets</h2>
+          {loadingTickets ? (
+            <Loading text="Loading tickets..." isDarkMode={isDarkMode} />
+          ) : tickets.length === 0 ? (
+            <div>No tickets found.</div>
+          ) : (
+            <div className="flex-grow">
+              <table className="w-full border-collapse border border-gray-300 dark:border-gray-700">
                 <thead>
                   <tr>
-                    <th className="border p-2">Title</th>
-                    <th className="border p-2">Description</th>
-                    <th className="border p-2">Status</th>
-                    <th className="border p-2">Priority</th>
+                    <th className={`px-3 py-1 rounded disabled:opacity-50 ${isDarkMode ? 'bg-gray-700 text-gray-100' : 'bg-gray-300 text-gray-900'}`}>
+                      Title
+                    </th>
+                    <th className={`px-3 py-1 rounded disabled:opacity-50 ${isDarkMode ? 'bg-gray-700 text-gray-100' : 'bg-gray-300 text-gray-900'}`}>
+                      Description
+                    </th>
+                    <th className={`px-3 py-1 rounded disabled:opacity-50 ${isDarkMode ? 'bg-gray-700 text-gray-100' : 'bg-gray-300 text-gray-900'}`}>
+                      Status
+                    </th>
+                    <th className={`px-3 py-1 rounded disabled:opacity-50 ${isDarkMode ? 'bg-gray-700 text-gray-100' : 'bg-gray-300 text-gray-900'}`}>
+                      Priority
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {currentTickets.map((ticket) => (
                     <tr key={ticket._id}>
-                      <td className="border p-2">{ticket.title}</td>
-                      <td className="border p-2">{ticket.description}</td>
-                      <td className="border p-2">{ticket.status}</td>
-                      <td className="border p-2">{ticket.priority || 'N/A'}</td>
+                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">
+                        {ticket.title}
+                      </td>
+                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">
+                        {ticket.description}
+                      </td>
+                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">
+                        {ticket.status}
+                      </td>
+                      <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">
+                        {ticket.priority || 'N/A'}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            {/* Pagination Controls */}
-            <div className="flex justify-center mt-4 space-x-2">
-              <button
-                onClick={() => paginate(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="px-3 py-1 bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded disabled:opacity-50"
-              >
-                Prev
-              </button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
-                <button
-                  key={number}
-                  onClick={() => paginate(number)}
-                  className={`px-3 py-1 rounded ${
-                    currentPage === number
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
-                  }`}
-                >
-                  {number}
-                </button>
-              ))}
-              <button
-                onClick={() => paginate(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="px-3 py-1 bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded disabled:opacity-50"
-              >
-                Next
-              </button>
-            </div>
-          </>
-        )}
-      </div>
-    </div>
-  );
-};
+          )}
 
-export default UserDashboard;
+          {/* Pagination Controls */}
+
+          
+{tickets.length > 0 && (
+  <div className="flex justify-center mt-4 pb-20">
+    <button
+      onClick={() => this.paginate(currentPage - 1)}
+      disabled={currentPage === 1}
+      className={`px-3 py-1 rounded disabled:opacity-50 ${isDarkMode ? 'bg-gray-700 text-gray-100' : 'bg-gray-300 text-gray-900'}`}
+    >
+      Prev
+    </button>
+    {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
+      <button
+        key={number}
+        onClick={() => this.paginate(number)}
+        className={`px-3 py-1 rounded mx-1 ${
+          currentPage === number
+            ? 'bg-blue-500 text-white'
+            : isDarkMode
+            ? 'bg-gray-700 text-gray-100'
+            : 'bg-gray-300 text-gray-900'
+        }`}
+      >
+        {number}
+      </button>
+    ))}
+    <button
+      onClick={() => this.paginate(currentPage + 1)}
+      disabled={currentPage === totalPages}
+      className={`px-3 py-1 rounded disabled:opacity-50 ${isDarkMode ? 'bg-gray-700 text-gray-100' : 'bg-gray-300 text-gray-900'}`}
+    >
+      Next
+    </button>
+  </div>
+)}
+        </div>
+      </div>
+    );
+  }
+}
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  isDarkMode: state.theme.isDarkMode,
+});
+
+export default connect(mapStateToProps)(UserDashboard);

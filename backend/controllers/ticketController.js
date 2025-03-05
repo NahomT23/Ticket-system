@@ -1,16 +1,8 @@
 import Ticket from "../models/ticketsModel.js";
+import { sendEmail } from "../config/mailer.js";
+import { ticketStatusUpdateTemplate } from "../templates/emailTemplate.js"; 
 
-// export const getAllTicket = async (req, res) => {
-//   try {
-//     if (req.user.role !== "admin") {
-//       return res.status(403).json({ message: "Access denied. Admins only." });
-//     }
-//     const tickets = await Ticket.find().populate("createdBy", "name email");
-//     res.status(200).json({ success: true, data: tickets });
-//   } catch (error) {
-//     res.status(500).json({ message: "Error retrieving tickets", error: error.message });
-//   }
-// };
+
 export const getAllTicket = async (req, res) => {
   try {
     if (req.user.role !== "admin") {
@@ -67,6 +59,7 @@ export const getTicket = async (req, res) => {
     res.status(500).json({ message: "Error retrieving the ticket", error: error.message });
   }
 };
+
 export const createTicket = async (req, res) => {
   try {
 
@@ -121,10 +114,34 @@ export const updateTicket = async (req, res) => {
       updateData.priority = priority;
     }
 
-    const updatedTicket = await Ticket.findByIdAndUpdate(id, updateData, { new: true });
+    // Populate the createdBy field so we can access the user's name and email
+    const updatedTicket = await Ticket.findByIdAndUpdate(id, updateData, { new: true })
+      .populate("createdBy", "name email");
+
     if (!updatedTicket) {
       return res.status(404).json({ message: "Ticket not found" });
     }
+
+    // If the status has been updated, send an email notification to the ticket creator
+    if (updateData.status && updatedTicket.createdBy?.email) {
+      const emailHTML = ticketStatusUpdateTemplate(
+        updatedTicket.createdBy.name,
+        updatedTicket.title,
+        updatedTicket.status
+      );
+
+      try {
+        await sendEmail({
+          to: updatedTicket.createdBy.email,
+          subject: "Your Ticket Status Has Been Updated",
+          html: emailHTML,
+        });
+      } catch (emailError) {
+        console.error("Email notification error:", emailError);
+        // You might choose to log this error without failing the whole update process
+      }
+    }
+
     res.status(200).json({ success: true, message: "Ticket updated successfully", data: updatedTicket });
   } catch (error) {
     res.status(500).json({ message: "Error updating ticket", error: error.message });

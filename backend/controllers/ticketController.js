@@ -62,15 +62,11 @@ export const getTicket = async (req, res) => {
 
 export const createTicket = async (req, res) => {
   try {
-
     if (req.user.role === "admin") {
       return res.status(403).json({ message: "Admins are not allowed to create tickets." });
     }
-
     const { title, description, priority } = req.body;
-
-    // Validate required fields.
-    if (!title || !description) {
+if (!title || !description) {
       return res.status(400).json({ message: "Title and description are required." });
     }
 

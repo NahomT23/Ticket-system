@@ -415,8 +415,11 @@ class AdminDashboard extends Component {
                                 isDarkMode ? 'text-gray-200' : 'text-gray-600'
                               }`}
                             >
+                              <Link
+                                to={`/ticket/${ticket._id}`}>
                               {ticket.description}
-                            </TableCell>
+                           </Link>
+                              </TableCell>
                             <TableCell className={isDarkMode ? 'text-gray-200' : 'text-gray-900'}>
                               <span
                                 className={`px-2 py-1 rounded-full text-xs font-medium ${

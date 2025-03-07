@@ -105,20 +105,19 @@ A full-stack role-based support ticketing system built as a mini-project to show
 
 **For the backend:**
 
-```bash
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret_key
-GMAIL_USER=your_gmail_address
-GMAIL_PASS=your_gmail_app_password
-JWT_EXPIRES_IN=your_jwt_expiry_value
+  ```bash
+  PORT=5000
+  MONGO_URI=your_mongodb_connection_string
+  JWT_SECRET=your_jwt_secret_key
+  GMAIL_USER=your_gmail_address
+  GMAIL_PASS=your_gmail_app_password
+  JWT_EXPIRES_IN=your_jwt_expiry_value
 
- **Frontend Setup:**
+**Create a .env file in the frontend folder and add the following**
+**For the frontend:**
 
-# Create a .env file in the /frontend folder and add:
-
-```bash
-VITE_BACKEND_URL=your_backend_url
+  ```bash
+  VITE_BACKEND_URL=your_backend_url
 
 
 ## Run the Application Locally:

@@ -68,11 +68,23 @@ A full-stack role-based support ticketing system built as a mini-project to show
 ---
 
 ## Project Structure
-/backend ├── controllers # Controller functions for business logic ├── config # Nodemailer and database configuration files ├── middleware # Custom middleware (auth, rate limiter, etc.) ├── models # Mongoose models (User, Ticket, etc.) ├── routes # API route definitions └── templates # Email template
+/backend
+├── controllers       # Controller functions for business logic
+├── config            # App and database configuration files
+├── middleware        # Custom middleware (auth, rate limiter, etc.)
+├── models            # Mongoose models (User, Ticket, etc.)
+├── routes            # API route definitions
+└── templates         # Email templates and other view templates
 
-/frontend ├── components # Reusable React components ├── pages # Page components (Login, Signup, Dashboard, etc.) └── features # Redux slices and related files for state management
+/frontend
+├── components        # Reusable React components
+├── pages             # Page components (Login, Signup, Dashboard, etc.)
+└── features          # Redux slices and related files for state management
 
 ---
+
+
+
 
 ## Setup & Installation
 

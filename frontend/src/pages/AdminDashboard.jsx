@@ -221,7 +221,7 @@ class AdminDashboard extends Component {
               isDarkMode={isDarkMode}
             />
             {currentTickets.length === 0 ? (
-              <p className={`text-center py-4 ${isDarkMode ? 'text-white' : 'text-gray-600'}`}>
+              <p className={`text-center py-4 ${isDarkMode ? 'text-gray-50' : 'text-gray-600'}`}>
                 No tickets found.
               </p>
             ) : (

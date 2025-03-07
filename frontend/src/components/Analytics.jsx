@@ -10,7 +10,7 @@ class DashboardAnalytics extends Component {
     const { tickets, isDarkMode } = this.props;
 
     if (!tickets || tickets.length === 0) {
-      return <p>No tickets found for analytics.</p>;
+      return <p className={` ${isDarkMode ? 'text-white' : ''}`}>No tickets found for analytics.</p>;
     }
 
     // Compute status counts

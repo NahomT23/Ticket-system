@@ -34,10 +34,10 @@ export const signUp = async (req, res, next) => {
 
     const existingUser = await User.findOne({ email }).session(session);
     if (existingUser) {
-      throw new Error("User already exists", { statusCode: 409 });
+      const error = new Error("User already exists");
+      error.statusCode = 409;
+      throw error;
     }
-
-    
 
     // Set default role; first user becomes admin regardless.
     let role = 'user';
@@ -90,16 +90,25 @@ export const signUp = async (req, res, next) => {
     next(error);
   }
 };
-
 export const signIn = async (req, res, next) => {
   try {
     const { email, password, invitationCode } = req.body;
 
     const user = await User.findOne({ email });
-    if (!user) throw new Error("User not found", { statusCode: 404 });
+   
+    if (!user) {
+      return res.status(404).json({ 
+        success: false,
+        message: "User not found" // Ensure this exact format
+      });
+    }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) throw new Error("Invalid Password", { statusCode: 401 });
+    if (!isPasswordValid) {
+      const error = new Error("Invalid Password");
+      error.statusCode = 401;
+      throw error;
+    }
 
     // If an invitation code is provided, validate it and upgrade user's role if not already admin.
     if (invitationCode) {
@@ -111,9 +120,11 @@ export const signIn = async (req, res, next) => {
         user.role = 'admin';
         await user.save();
       }
-      // Mark the invitation code as used and generate a new code for the invitation owner.
       await invitationOwner.useInvitationCode();
     }
+
+
+    
 
     const token = jwt.sign(
       { userId: user._id },
@@ -130,6 +141,7 @@ export const signIn = async (req, res, next) => {
     next(error);
   }
 };
+
 
 export const signOut = async (req, res, next) => {
   res.status(200).json({ message: 'Sign out successful' });

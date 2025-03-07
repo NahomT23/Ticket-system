@@ -62,7 +62,7 @@ class SignUp extends Component {
         }
       } else {
         // Display error from rejected action
-        toast.error(resultAction.error.message || 'Sign up failed');
+        toast.error(this.props.auth.error || 'Sign up failed');
       }
     } catch (err) {
       toast.error('Failed to sign up: ' + err.message);
@@ -136,7 +136,7 @@ class SignUp extends Component {
               />
             </div>
           )}
-          {auth.error && <p className="text-red-500 mb-4">{auth.error}</p>}
+
           <button
             type="submit"
             disabled={loading}

@@ -27,6 +27,7 @@ class SignIn extends Component {
     this.setState({ [name]: value });
   };
 
+
   handleSubmit = async (e) => {
     e.preventDefault();
     this.setState({ loading: true });
@@ -45,15 +46,15 @@ class SignIn extends Component {
           this.props.navigate('/userdashboard');
         }
       } else {
-        toast.error(resultAction.error.message || 'Sign in failed');
+        toast.error(this.props.auth.error || 'Sign in failed');
       }
     } catch (err) {
-      toast.error('Failed to sign in: ' + err.message);
+      // Use auth.error from Redux state instead of err.message
+      toast.error('Failed to sign in: ' + this.props.auth.error);
     } finally {
       this.setState({ loading: false });
     }
   };
-
   render() {
     const { auth } = this.props;
     const { loading } = this.state;
@@ -93,7 +94,7 @@ class SignIn extends Component {
               className="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
           </div>
-          {auth.error && <p className="text-red-500 mb-4">{auth.error}</p>}
+
           <button
             type="submit"
             disabled={loading}

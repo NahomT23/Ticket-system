@@ -28,7 +28,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(helmet());
 
-app.use('/api/auth', authLimiter, authRouter);
+app.use('/api/auth', authRouter);
 app.use('/api/admin', adminLimiter, adminRouter);
 app.use('/api/ticket', ticketLimiter, ticketRouter);
 
@@ -37,4 +37,3 @@ connectToDb();
 app.listen(PORT, () => {
     console.log(`Server is running on port: ${PORT}`);
 });
-

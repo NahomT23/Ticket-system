@@ -9,7 +9,7 @@ class TicketStats extends Component {
     const { tickets, isDarkMode } = this.props;
 
     if (!tickets || tickets.length === 0) {
-      return <p>No tickets found.</p>;
+      return <p className={`${isDarkMode ? 'text-white' : ''}`}>No tickets found.</p>;
     }
 
     // Calculate ticket statistics

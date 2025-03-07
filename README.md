@@ -100,8 +100,6 @@ A full-stack role-based support ticketing system built as a mini-project to show
    cd ../frontend
    npm install
 
-
-
 # Environment Variables
 
 **Create a .env file in the backend folder and add the following**
@@ -129,10 +127,10 @@ A full-stack role-based support ticketing system built as a mini-project to show
    npm run start
    
 **Frontend:**
-2. **In the /frontend folder, run:**
+1. **In the /frontend folder, run:**
+   
    ```bash
    npm run dev
-
 
 ```
 

@@ -100,15 +100,13 @@ A full-stack role-based support ticketing system built as a mini-project to show
    cd ../frontend
    npm install
 
+# Environment Variables
 **Create a .env file in the backend folder and add the following**
 
 For the backend:
 Create a .env file in the /backend folder and add the following (adjust values as needed):
 
-
-env
-Copy
-Edit
+```bash
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret_key
@@ -120,21 +118,23 @@ For the frontend:
 
 Create a .env file in the /frontend folder and add:
 
-   ```bash
-env
+```bash
 VITE_BACKEND_URL=your_backend_url
-Run the Application Locally:
 
-Backend:
+
+# Run the Application Locally:
+
+**Backend:**
 In the /backend folder, run:
 
-   ```bash
-npm run dev
-Frontend:
+```bash
+npm run start
+
+**Frontend:**
 In the /frontend folder, run:
 
-   ```bash
-npm run start
+```bash
+npm run dev
 
 API Endpoints
 Authentication

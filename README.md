@@ -101,14 +101,15 @@ A full-stack role-based support ticketing system built as a mini-project to show
    git clone https://github.com/yourusername/role-based-ticketing-system.git
    cd role-based-ticketing-system
    
-Backend Setup:
+2. **Backend Setup:**
 
-   ```bash
+```bash
 cd backend
 npm install
-Frontend Setup:
 
-   ```bash
+3. **Frontend Setup:**
+
+```bash
 cd ../frontend
 npm install
 

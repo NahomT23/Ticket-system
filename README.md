@@ -4,18 +4,7 @@ A full-stack role-based support ticketing system built as a mini-project to show
 
 ---
 
-## Table of Contents
-
-- [Features](#features)
-- [Technologies Used](#technologies-used)
-- [Project Structure](#project-structure)
-- [Setup & Installation](#setup--installation)
-- [API Endpoints](#api-endpoints)
-- [Environment Variables](#environment-variables)
-- [Deployment](#deployment)
-- [Usage](#usage)
-
----
+-
 
 ## Features
 
@@ -102,21 +91,19 @@ A full-stack role-based support ticketing system built as a mini-project to show
    cd role-based-ticketing-system
    
 2. **Backend Setup:**
-
-```bash
 cd backend
 npm install
 
 3. **Frontend Setup:**
-
-```bash
 cd ../frontend
 npm install
+
+**Create a .env file in the backend folder and add the following**
 
 For the backend:
 Create a .env file in the /backend folder and add the following (adjust values as needed):
 
-   ```bash
+
 env
 Copy
 Edit

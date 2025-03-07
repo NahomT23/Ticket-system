@@ -91,10 +91,14 @@ A full-stack role-based support ticketing system built as a mini-project to show
    cd role-based-ticketing-system
    
 2. **Backend Setup:**
+
+   ```bash
 cd backend
 npm install
 
 3. **Frontend Setup:**
+
+   ```bash
 cd ../frontend
 npm install
 

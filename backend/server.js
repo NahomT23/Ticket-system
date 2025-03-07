@@ -15,29 +15,22 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 const corsOptions = {
-    origin: 'http://localhost:5173',  // Your frontend's address
-    methods: 'GET,POST,PUT,DELETE,OPTIONS',  // Allowed HTTP methods, ensure OPTIONS is here
-    allowedHeaders: 'Content-Type,Authorization',  // Allowed headers
-    credentials: true,  // Allow cookies to be sent
+    origin: 'http://localhost:5173',  
+    methods: 'GET,POST,PUT,DELETE,OPTIONS', 
+    allowedHeaders: 'Content-Type,Authorization',
+    credentials: true,  
   };
   
-  app.use(cors(corsOptions));  // Enable CORS with the specified options
-  
-  // Middleware for preflight requests (OPTIONS)
-  app.options('*', cors(corsOptions));  // Handle preflight requests for all routes
-  
+  app.use(cors(corsOptions));  
+  app.options('*', cors(corsOptions));
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(helmet());
 
-// app.use('/api/auth', authLimiter, authRouter);
-// app.use('/api/admin', adminLimiter, adminRouter);
-// app.use('/api/ticket', ticketLimiter, ticketRouter);
-
-app.use('/api/auth', authRouter);
-app.use('/api/admin', adminRouter);
-app.use('/api/ticket', ticketRouter);
-
+app.use('/api/auth', authLimiter, authRouter);
+app.use('/api/admin', adminLimiter, adminRouter);
+app.use('/api/ticket', ticketLimiter, ticketRouter);
 
 connectToDb();
 

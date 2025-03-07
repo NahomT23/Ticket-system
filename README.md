@@ -132,8 +132,6 @@ A full-stack role-based support ticketing system built as a mini-project to show
    ```bash
    npm run dev
 
-```
-
 
 ## API Endpoints:
 #### Register a new user. The first registered user automatically becomes an admin.

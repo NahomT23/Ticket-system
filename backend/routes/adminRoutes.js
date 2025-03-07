@@ -10,3 +10,5 @@ const adminRouter = Router();
 adminRouter.post('/generate', authorize, adminsOnly, generateInvitationCode);
 
 export default adminRouter;
+
+

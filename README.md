@@ -100,21 +100,17 @@ A full-stack role-based support ticketing system built as a mini-project to show
    ```bash
    git clone https://github.com/yourusername/role-based-ticketing-system.git
    cd role-based-ticketing-system
+   
 Backend Setup:
 
    ```bash
-Copy
-Edit
 cd backend
 npm install
 Frontend Setup:
 
    ```bash
-Copy
-Edit
 cd ../frontend
 npm install
-Configure Environment Variables:
 
 For the backend:
 Create a .env file in the /backend folder and add the following (adjust values as needed):
@@ -129,13 +125,13 @@ JWT_SECRET=your_jwt_secret_key
 GMAIL_USER=your_gmail_address
 GMAIL_PASS=your_gmail_app_password
 JWT_EXPIRES_IN=your_jwt_expiry_value
+
 For the frontend:
+
 Create a .env file in the /frontend folder and add:
 
    ```bash
 env
-Copy
-Edit
 VITE_BACKEND_URL=your_backend_url
 Run the Application Locally:
 
@@ -143,16 +139,13 @@ Backend:
 In the /backend folder, run:
 
    ```bash
-Copy
-Edit
 npm run dev
 Frontend:
 In the /frontend folder, run:
 
    ```bash
-Copy
-Edit
 npm run start
+
 API Endpoints
 Authentication
 POST /api/auth/signup

@@ -134,28 +134,51 @@ A full-stack role-based support ticketing system built as a mini-project to show
    npm run dev
 
 
-API Endpoints
-Authentication
+```
+
+
+## API Endpoints:
+#### Register a new user. The first registered user automatically becomes an admin.
+
+```http
 POST /api/auth/signup
-Register a new user. The first registered user automatically becomes an admin.
+```
 
-## POST /api/auth/login
-Authenticate a user and return a JWT token.
+#### Authenticate a user and return a JWT token.
 
-## POST /api/ticket/create
-Create a new support ticket. (Requires authentication)
+```http
+POST /api/auth/login
+```
 
-## GET /api/ticket/get
 
-## User: Retrieves only the tickets created by the authenticated user.
-## Admin: Retrieves all tickets.
-## PUT /api/tickets/:id
-Update ticket status (Admins only).
+#### Create a new support ticket. (Requires authentication)
+```http
+POST /api/ticket/create
+```
 
-## Admin Invitation
-## POST /api/admin/generate
-Admins can generate a secure invitation code for promoting users to admin.
-Invitation codes expire after one day or once used.
+
+#### User: Retrieves only the tickets created by the authenticated user.
+#### Admin: Retrieves all tickets.
+```http
+GET /api/ticket/get
+```
+
+
+
+
+#### Update ticket status (Admins only).
+```http
+PUT /api/ticket/:id
+```
+
+
+#### Admins can generate a secure invitation code for promoting users to admin.
+#### Invitation codes expire after one day or once used.
+
+```http
+POST /api/admin/generate
+```
+
 
 ### Deployment
 The project is deployed on Vercel. To deploy your changes:

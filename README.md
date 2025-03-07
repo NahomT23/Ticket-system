@@ -104,7 +104,6 @@ A full-stack role-based support ticketing system built as a mini-project to show
 **Create a .env file in the backend folder and add the following**
 
 **For the backend:**
-# Create a .env file in the /backend folder and add the following (adjust values as needed):
 
 ```bash
 PORT=5000
@@ -114,7 +113,7 @@ GMAIL_USER=your_gmail_address
 GMAIL_PASS=your_gmail_app_password
 JWT_EXPIRES_IN=your_jwt_expiry_value
 
-**For the frontend:**
+ **Frontend Setup:**
 
 # Create a .env file in the /frontend folder and add:
 

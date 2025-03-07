@@ -66,6 +66,7 @@ A full-stack role-based support ticketing system built as a mini-project to show
 /frontend
 ├── components        # Reusable React components
 ├── pages             # Page components (Login, Signup, Dashboard, etc.)
+├── hooks             # Page components (useInvitation, useUserTickets, useTickets, etc.)
 └── features          # Redux slices and related files for state management
 
 ---

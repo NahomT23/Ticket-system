@@ -132,7 +132,6 @@ A full-stack role-based support ticketing system built as a mini-project to show
    ```bash
    npm run dev
 
-
 ## API Endpoints:
 #### Register a new user. The first registered user automatically becomes an admin.
 
@@ -146,12 +145,10 @@ POST /api/auth/signup
 POST /api/auth/login
 ```
 
-
 #### Create a new support ticket. (Requires authentication)
 ```http
 POST /api/ticket/create
 ```
-
 
 #### User: Retrieves only the tickets created by the authenticated user.
 #### Admin: Retrieves all tickets.
@@ -159,14 +156,10 @@ POST /api/ticket/create
 GET /api/ticket/get
 ```
 
-
-
-
 #### Update ticket status (Admins only).
 ```http
 PUT /api/ticket/:id
 ```
-
 
 #### Admins can generate a secure invitation code for promoting users to admin.
 #### Invitation codes expire after one day or once used.
@@ -174,7 +167,6 @@ PUT /api/ticket/:id
 ```http
 POST /api/admin/generate
 ```
-
 
 ### Deployment
 The project is deployed on Vercel. To deploy your changes:
@@ -191,7 +183,7 @@ Use the signup and login pages to register and log in. There is an extra input f
 ## Dashboard:
 
 User Dashboard: View and create tickets.
-Admin Dashboard: View all tickets and update their status.
+Admin Dashboard: View all tickets and update or delete their status.
 ## Invitation Code:
 Admins can generate invitation codes to promote other users to admin.
 

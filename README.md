@@ -123,16 +123,16 @@ A full-stack role-based support ticketing system built as a mini-project to show
 ## Run the Application Locally:
 
 **Backend:**
-In the /backend folder, run:
+1. **In the /backend folder, run:**
 
-```bash
-npm run start
-
+   ```bash
+   npm run start
+   
 **Frontend:**
-In the /frontend folder, run:
+2. **In the /frontend folder, run:**
+   ```bash
+   npm run dev
 
-```bash
-npm run dev
 
 API Endpoints
 Authentication

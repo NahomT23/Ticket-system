@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { signInAsync } from '../features/authSlice';
 import { Link, useNavigate } from 'react-router-dom';
-
+import { toast } from 'react-toastify';
 
 function withRouter(Component) {
   return function ComponentWithRouterProp(props) {
@@ -37,15 +37,18 @@ class SignIn extends Component {
         invitationCode: this.state.invitationCode,
       });
       if (signInAsync.fulfilled.match(resultAction)) {
+        toast.success('Sign in successful!');
         const role = resultAction.payload.user.role;
         if (role === 'admin') {
           this.props.navigate('/admindashboard');
         } else {
           this.props.navigate('/userdashboard');
         }
+      } else {
+        toast.error(resultAction.error.message || 'Sign in failed');
       }
     } catch (err) {
-      console.error('Failed to sign in: ', err);
+      toast.error('Failed to sign in: ' + err.message);
     } finally {
       this.setState({ loading: false });
     }

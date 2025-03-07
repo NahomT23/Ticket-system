@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { signUpAsync } from '../features/authSlice';
 import { Link, useNavigate } from 'react-router-dom';
-
+import { toast } from 'react-toastify';
 
 function withRouter(Component) {
   return function ComponentWithRouterProp(props) {
@@ -37,10 +37,12 @@ class SignUp extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Use toast instead of alert for missing invitation code
     if (this.state.role === 'admin' && !this.state.invitationCode) {
-      alert('Invitation code is required for admin signup.');
+      toast.error('Invitation code is required for admin signup.');
       return;
     }
+
     this.setState({ loading: true });
     try {
       const resultAction = await this.props.signUpAsync({
@@ -51,15 +53,19 @@ class SignUp extends Component {
         invitationCode: this.state.invitationCode,
       });
       if (signUpAsync.fulfilled.match(resultAction)) {
+        toast.success('Signup successful!');
         const role = resultAction.payload.user.role;
         if (role === 'admin') {
           this.props.navigate('/admindashboard');
         } else {
           this.props.navigate('/userdashboard');
         }
+      } else {
+        // Display error from rejected action
+        toast.error(resultAction.error.message || 'Sign up failed');
       }
     } catch (err) {
-      console.error('Failed to sign up: ', err);
+      toast.error('Failed to sign up: ' + err.message);
     } finally {
       this.setState({ loading: false });
     }

@@ -4,8 +4,6 @@ A full-stack role-based support ticketing system built as a mini-project to show
 
 ---
 
--
-
 ## Features
 
 ### User Authentication & Authorization
@@ -93,14 +91,14 @@ A full-stack role-based support ticketing system built as a mini-project to show
 2. **Backend Setup:**
 
    ```bash
-cd backend
-npm install
+   cd backend
+   npm install
 
 3. **Frontend Setup:**
 
    ```bash
-cd ../frontend
-npm install
+   cd ../frontend
+   npm install
 
 **Create a .env file in the backend folder and add the following**
 

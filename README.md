@@ -100,7 +100,10 @@ A full-stack role-based support ticketing system built as a mini-project to show
    cd ../frontend
    npm install
 
+
+
 # Environment Variables
+
 **Create a .env file in the backend folder and add the following**
 
 **For the backend:**
@@ -111,7 +114,8 @@ A full-stack role-based support ticketing system built as a mini-project to show
   JWT_SECRET=your_jwt_secret_key
   GMAIL_USER=your_gmail_address
   GMAIL_PASS=your_gmail_app_password
-  JWT_EXPIRES_IN=your_jwt_expiry_value
+  JWT_EXPIRES_IN=your_jwt_expiry_DATE
+
 
 **Create a .env file in the frontend folder and add the following**
 **For the frontend:**
